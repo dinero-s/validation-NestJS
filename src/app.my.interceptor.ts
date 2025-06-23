@@ -2,19 +2,24 @@ import {
     CallHandler,
     Injectable,
     NestInterceptor,
-    ExecutionContext,
+    ExecutionContext, InternalServerErrorException,
 } from '@nestjs/common';
-import { Observable } from 'rxjs';
+import {catchError, Observable, tap, throwError} from 'rxjs';
 
 @Injectable()
 export class MyInterceptor implements NestInterceptor {
     intercept(context: ExecutionContext, next: CallHandler): Observable<any> {
-        console.log(
-            {
-                status: "success",
-                data: context.getClass()
-            });
-        return next.handle();
+        return next
+            .handle()
+            .pipe(
+                tap(() => {
+                    console.log({ status: "success", data: context.getClass() });
+                }),
+                catchError(err => {
+                    console.log({ status: "success", data: err });
+                    return throwError(new InternalServerErrorException());
+                })
+            );
     }
 
 }
