@@ -1,4 +1,4 @@
-import {Body, Controller, Get, Param, Post, UseInterceptors, UsePipes} from '@nestjs/common';
+import {Body, Controller, Get, HttpException, Param, Post, UseInterceptors, UsePipes} from '@nestjs/common';
 import { AppService } from './app.service';
 import {MyInterceptor} from "./app.my.interceptor";
 import {IdValidationPipe} from "./app.validation.pipe";
@@ -20,9 +20,12 @@ export class AppController {
     return { id: id };
   }
 
-  @UsePipes(new RegUserValidationPipe())
+  // @UsePipes(new RegUserValidationPipe())
   @Post('/')
   login(@Body() user: regUserDto) {
+    if (!user.email || !user.password) {
+      throw new HttpException('Bad request', 400);
+    }
     return user;
   }
 }
