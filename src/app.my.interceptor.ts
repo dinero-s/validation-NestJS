@@ -16,8 +16,8 @@ export class MyInterceptor implements NestInterceptor {
                     console.log({ status: "success", data: context.getClass() });
                 }),
                 catchError(err => {
-                    console.log({ status: "success", data: err });
-                    return throwError(new InternalServerErrorException());
+                    console.log({ status: "error", data: err });
+                    return throwError(err);
                 })
             );
     }

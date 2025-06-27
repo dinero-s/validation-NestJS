@@ -20,7 +20,7 @@ export class AppController {
     return { id: id };
   }
 
-  // @UsePipes(new RegUserValidationPipe())
+  @UsePipes(new RegUserValidationPipe())
   @Post('/')
   login(@Body() user: regUserDto) {
     if (!user.email || !user.password) {
